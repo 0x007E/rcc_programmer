@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<AssemblyName>Programmer</AssemblyName>
+	<RootNamespace>RaGae.Projects.RCC</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
+    <PackageReference Include="System.IO.Ports" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="FormMain.cs">
+      <CustomToolNamespace>RaGae.Projects.RCC</CustomToolNamespace>
+    </Compile>
+    <Compile Update="FormMain.Designer.cs">
+      <CustomToolNamespace>RaGae.Projects.RCC</CustomToolNamespace>
+    </Compile>
+    <Compile Update="Program.cs">
+      <CustomToolNamespace>RaGae.Projects.RCC</CustomToolNamespace>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\StringResource.de.Designer.cs">
+      <DependentUpon>StringResource.de.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Properties\StringResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StringResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="FormMain.de.resx">
+      <CustomToolNamespace>RaGae.Projects.RCC</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FormMain.resx">
+      <CustomToolNamespace>RaGae.Projects.RCC</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RaGae.Projects.RCC</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\StringResource.de.resx">
+      <CustomToolNamespace>RaGae.Projects.RCC</CustomToolNamespace>
+      <LastGenOutput>StringResource.de.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\StringResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringResource.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RaGae.Projects.RCC</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ICON.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
