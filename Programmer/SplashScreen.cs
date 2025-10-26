@@ -1,17 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RaGae.Projects.RCC.Core;
 using RaGae.Projects.RCC.Programmer;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace RaGae.Projects.RCC
 {
@@ -38,18 +29,19 @@ namespace RaGae.Projects.RCC
 
         private async Task DownloadZipAndExtractAsync(string downloadUrl, string extractPath)
         {
+            Directory.CreateDirectory(Program.TempPath);
             string temporaryFileName = $"{Guid.NewGuid().ToString()}.zip";
 
             using (HttpClient httpClient = new HttpClient())
             {
                 using (Stream fileStream = await httpClient.GetStreamAsync(downloadUrl))
                 {
-                    using (FileStream localFile = new FileStream(temporaryFileName, FileMode.Create, FileAccess.Write))
+                    using (FileStream localFile = new FileStream(Path.Combine(Program.TempPath, temporaryFileName), FileMode.Create, FileAccess.Write))
                     {
                         await fileStream.CopyToAsync(localFile);
                     }
                 }
-                ZipFile.ExtractToDirectory(temporaryFileName, extractPath, overwriteFiles: true);
+                ZipFile.ExtractToDirectory(Path.Combine(Program.TempPath, temporaryFileName), extractPath, overwriteFiles: true);
             }
         }
 
@@ -167,7 +159,6 @@ namespace RaGae.Projects.RCC
                 {
                     UseShellExecute = true
                 });
-
             }
             catch { }
         }

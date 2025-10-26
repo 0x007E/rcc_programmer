@@ -1,11 +1,6 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.VisualBasic;
 using RaGae.Projects.RCC.Core;
 using RaGae.Projects.RCC.Domain.Extensions;
 using System.Diagnostics;
-using System.IO.Compression;
-using System.Runtime;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RaGae.Projects.RCC.Programmer
 {
@@ -79,30 +74,28 @@ namespace RaGae.Projects.RCC.Programmer
 
         private async Task RunAvrdudeAsync(string extractPath, string port)
         {
-            ProcessStartInfo psi = new ProcessStartInfo
-            {
-                FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Program.DudeConfig.Programmer),
-                Arguments = $"{(Program.DudeConfig.Verbose ? "-v" : string.Empty)} -p {Program.Firmware.MCU} -c {Program.DudeConfig.Mode} -P {port} -b {Program.DudeConfig.Baudrate} -U flash:w:{Path.Combine(extractPath, Program.Firmware.FlashFile)}:i -U eeprom:w:{Path.Combine(extractPath, Program.Firmware.EEPROMFile)}:i",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
             try
             {
                 using (Process process = new Process())
                 {
-                    process.StartInfo = psi;
+                    process.StartInfo = new ProcessStartInfo
+                    {
+                        FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Program.DudeConfig.Programmer),
+                        Arguments = $"{(Program.DudeConfig.Verbose ? "-v" : string.Empty)} -p {Program.Firmware.MCU} -c {Program.DudeConfig.Mode} -P {port} -b {Program.DudeConfig.Baudrate} -U flash:w:{Path.Combine(extractPath, Program.Firmware.FlashFile)}:i -U eeprom:w:{Path.Combine(extractPath, Program.Firmware.EEPROMFile)}:i",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
                     process.Start();
 
                     string output = await process.StandardOutput.ReadToEndAsync();
                     string error = await process.StandardError.ReadToEndAsync();
 
-                    Debug.WriteLine("avrdude output:\n" + output);
-                    Debug.WriteLine("avrdude error:\n" + error);
+                    await File.WriteAllTextAsync(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "avrdude.out"), output);
+                    await File.WriteAllTextAsync(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "avrdude.err"), error);
 
-                    await Task.Run(() => process.WaitForExit());
+                    await process.WaitForExitAsync();
 
                     if (process.ExitCode == 0)
                     {
@@ -128,7 +121,10 @@ namespace RaGae.Projects.RCC.Programmer
                 return;
             }
 
-            this.Enabled = false;
+            this.groupBoxIntensity.Enabled = false;
+            this.groupBoxProgram.Enabled = false;
+            this.groupBoxRCC.Enabled = false;
+
             this.progressBarStatus.Value = 10;
 
             string[] lines = await File.ReadAllLinesAsync(Path.Combine(Program.TempPath, Program.Firmware.EEPROMFile));
@@ -170,7 +166,10 @@ namespace RaGae.Projects.RCC.Programmer
             await RunAvrdudeAsync(extractPath: Program.TempPath, port: comboBoxPort.SelectedItem.ToString());
 
             this.progressBarStatus.Value = 100;
-            this.Enabled = true;
+
+            this.groupBoxIntensity.Enabled = true;
+            this.groupBoxProgram.Enabled = true;
+            this.groupBoxRCC.Enabled = true;
         }
 
         public static byte CalculateIntelHexChecksum(byte[] bytes)
@@ -192,7 +191,6 @@ namespace RaGae.Projects.RCC.Programmer
                 {
                     UseShellExecute = true
                 });
-
             }
             catch { }
         }

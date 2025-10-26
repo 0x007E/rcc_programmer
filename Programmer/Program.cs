@@ -41,7 +41,7 @@ namespace RaGae.Projects.RCC.Programmer
         {
             get;
             set;
-        } = Path.Combine(Path.GetTempPath(), "firmware.zip");
+        } = Path.Combine(TempPath, "firmware.zip");
 
 
         /// <summary>
@@ -68,12 +68,14 @@ namespace RaGae.Projects.RCC.Programmer
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
-            SplashScreen splash = new();
-            Application.Run(splash);
-
-            if (splash.DialogResult != DialogResult.OK)
+            using (SplashScreen splash = new())
             {
-                return;
+                splash.ShowDialog();
+                if (splash.DialogResult != DialogResult.OK)
+                {
+                    Application.Exit();
+                    return;
+                }
             }
             Application.Run(new FormMain());
         }
