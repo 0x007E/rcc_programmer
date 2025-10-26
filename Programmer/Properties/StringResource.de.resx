@@ -123,9 +123,6 @@
   <data name="ErrorUnhandledUIException" xml:space="preserve">
     <value>Unbehandelte UI Exception</value>
   </data>
-  <data name="StatusFirmwareDownloadComplete" xml:space="preserve">
-    <value>Firmware erfolgreich heruntergeladen!</value>
-  </data>
   <data name="MessageBoxInformationTitle" xml:space="preserve">
     <value>Information</value>
   </data>
@@ -162,10 +159,25 @@
   <data name="ErrorPositionOutsideDataarea" xml:space="preserve">
     <value>Position ist außerhalb des Datenbereichs!</value>
   </data>
-  <data name="StatusProgrammerDownloadComplete" xml:space="preserve">
-    <value>Programmer (AVR-Dude) erfolgreich heruntergeladen!</value>
-  </data>
   <data name="ErrorProgrammerDownloadFailed" xml:space="preserve">
     <value>Herunterladen des Programmers (AVR-Dude) fehlgeschlagen!</value>
+  </data>
+  <data name="ErrorFirmwareConfigNullAssignment" xml:space="preserve">
+    <value>Firmware konfiguration wurde in appsettings.json nicht gefunden!</value>
+  </data>
+  <data name="ErrorAVRDudeConfigNullAssignment" xml:space="preserve">
+    <value>AVR-Dude konfiguration wurde in appsettings.json nicht gefunden!</value>
+  </data>
+  <data name="MessageLoadingConfiguration" xml:space="preserve">
+    <value>Lade Konfiguration!</value>
+  </data>
+  <data name="MessageLoadingAVRDude" xml:space="preserve">
+    <value>Lade AVR-Dude!</value>
+  </data>
+  <data name="MessageLoadingFirmware" xml:space="preserve">
+    <value>Lade Firmware!</value>
+  </data>
+  <data name="MessageStartingApplication" xml:space="preserve">
+    <value>Starte Applikation!</value>
   </data>
 </root>

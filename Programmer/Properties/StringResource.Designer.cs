@@ -61,6 +61,15 @@ namespace RaGae.Projects.RCC {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AVR-Dude configuration not found in appsettings.json!.
+        /// </summary>
+        internal static string ErrorAVRDudeConfigNullAssignment {
+            get {
+                return ResourceManager.GetString("ErrorAVRDudeConfigNullAssignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modification of data failed!.
         /// </summary>
         internal static string ErrorDataModificationFailed {
@@ -75,6 +84,15 @@ namespace RaGae.Projects.RCC {
         internal static string ErrorEmptyDataArray {
             get {
                 return ResourceManager.GetString("ErrorEmptyDataArray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware configuration not found in appsettings.json!.
+        /// </summary>
+        internal static string ErrorFirmwareConfigNullAssignment {
+            get {
+                return ResourceManager.GetString("ErrorFirmwareConfigNullAssignment", resourceCulture);
             }
         }
         
@@ -187,20 +205,38 @@ namespace RaGae.Projects.RCC {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Firmware downloaded successfully!.
+        ///   Looks up a localized string similar to Loading AVR-Dude!.
         /// </summary>
-        internal static string StatusFirmwareDownloadComplete {
+        internal static string MessageLoadingAVRDude {
             get {
-                return ResourceManager.GetString("StatusFirmwareDownloadComplete", resourceCulture);
+                return ResourceManager.GetString("MessageLoadingAVRDude", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Programmer (AVR-Dude) downloaded successfully!.
+        ///   Looks up a localized string similar to Loading confguration!.
         /// </summary>
-        internal static string StatusProgrammerDownloadComplete {
+        internal static string MessageLoadingConfiguration {
             get {
-                return ResourceManager.GetString("StatusProgrammerDownloadComplete", resourceCulture);
+                return ResourceManager.GetString("MessageLoadingConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading firmware!.
+        /// </summary>
+        internal static string MessageLoadingFirmware {
+            get {
+                return ResourceManager.GetString("MessageLoadingFirmware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting application!.
+        /// </summary>
+        internal static string MessageStartingApplication {
+            get {
+                return ResourceManager.GetString("MessageStartingApplication", resourceCulture);
             }
         }
         

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using RaGae.Projects.RCC.Core;
 using System.Configuration;
 using System.Globalization;
 
@@ -7,6 +8,41 @@ namespace RaGae.Projects.RCC.Programmer
     internal static class Program
     {
         public static IConfiguration Configuration;
+
+        private static Firmware firmware;
+        private static DudeConfig dudeConfig;
+        public static List<CubeColor> cubeColor;
+
+        public static Firmware Firmware
+        {
+            get => firmware;
+            set => firmware = value ?? throw new ArgumentNullException(nameof(value), StringResource.ErrorFirmwareConfigNullAssignment);
+        }
+
+        public static DudeConfig DudeConfig
+        {
+            get => dudeConfig;
+            set => dudeConfig = value ?? throw new ArgumentNullException(nameof(value), StringResource.ErrorAVRDudeConfigNullAssignment);
+        }
+
+        public static List<CubeColor> CubeColor
+        {
+            get;
+            set;
+        }
+
+        public static string TempPath
+        {
+            get;
+            set;
+        } = Path.Combine(Path.GetTempPath(), "RCC_" + Guid.NewGuid().ToString());
+
+        public static string TempZIPPath
+        {
+            get;
+            set;
+        } = Path.Combine(Path.GetTempPath(), "firmware.zip");
+
 
         /// <summary>
         ///  The main entry point for the application.
@@ -31,6 +67,14 @@ namespace RaGae.Projects.RCC.Programmer
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+
+            SplashScreen splash = new();
+            Application.Run(splash);
+
+            if (splash.DialogResult != DialogResult.OK)
+            {
+                return;
+            }
             Application.Run(new FormMain());
         }
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)

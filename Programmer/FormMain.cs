@@ -11,13 +11,7 @@ namespace RaGae.Projects.RCC.Programmer
 {
     public partial class FormMain : Form
     {
-        private readonly Firmware firmware = Program.Configuration.GetSection(nameof(Firmware)).Get<Firmware>();
-        private readonly DudeConfig dudeConfig = Program.Configuration.GetSection(nameof(DudeConfig)).Get<DudeConfig>();
-        private readonly List<CubeColor> cubeColor = Program.Configuration.GetSection(nameof(CubeColor)).Get<List<CubeColor>>();
-
         private readonly string[] ports;
-        private string tempZipPath = Path.Combine(Path.GetTempPath(), "firmware.zip");
-        string tempPath = Path.Combine(Path.GetTempPath(), "RCC_" + Guid.NewGuid().ToString());
 
         public FormMain()
         {
@@ -39,60 +33,12 @@ namespace RaGae.Projects.RCC.Programmer
             buttonProgram.Enabled = (comboBoxPort.SelectedIndex != -1);
         }
 
-        private async Task DownloadZipAndExtractAsync(string downloadUrl, string extractPath)
-        {
-            string temporaryFileName = $"{Guid.NewGuid().ToString()}.zip";
-
-            using (HttpClient httpClient = new HttpClient())
-            {
-                using (Stream fileStream = await httpClient.GetStreamAsync(downloadUrl))
-                {
-                    using (FileStream localFile = new FileStream(temporaryFileName, FileMode.Create, FileAccess.Write))
-                    {
-                        await fileStream.CopyToAsync(localFile);
-                    }
-                }
-                ZipFile.ExtractToDirectory(temporaryFileName, extractPath, overwriteFiles: true);
-            }
-        }
-
         private async void FormMain_Load(object sender, EventArgs e)
         {
-            if (this.cubeColor?.Count >= 2)
+            if (Program.CubeColor?.Count >= 2)
             {
-                buttonLED1.BackColor = this.cubeColor[0].GetColor();
-                buttonLED2.BackColor = this.cubeColor[1].GetColor();
-            }
-
-            if(!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dudeConfig.Programmer)))
-            {
-                try
-                {
-                    Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dudeConfig.ExtractPath));
-
-                    await DownloadZipAndExtractAsync(dudeConfig.DownloadUrl, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dudeConfig.ExtractPath));
-                    MessageBox.Show(StringResource.StatusProgrammerDownloadComplete, StringResource.MessageBoxInformationTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"{StringResource.ErrorProgrammerDownloadFailed} {ex.Message}", StringResource.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    this.Close();
-                }
-            }
-
-            Directory.CreateDirectory(tempPath);
-
-            try
-            {
-                await DownloadZipAndExtractAsync(firmware.DownloadUrl, tempPath);
-                MessageBox.Show(StringResource.StatusFirmwareDownloadComplete, StringResource.MessageBoxInformationTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{StringResource.ErrorFirmwareDownloadFailed} {ex.Message}", StringResource.MessageBoxErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                this.Close();
+                buttonLED1.BackColor = Program.CubeColor[0].GetColor();
+                buttonLED2.BackColor = Program.CubeColor[1].GetColor();
             }
             this.Enabled = true;
         }
@@ -135,8 +81,8 @@ namespace RaGae.Projects.RCC.Programmer
         {
             ProcessStartInfo psi = new ProcessStartInfo
             {
-                FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, this.dudeConfig.Programmer),
-                Arguments = $"{(this.dudeConfig.Verbose ? "-v" : string.Empty)} -p {this.firmware.MCU} -c {this.dudeConfig.Mode} -P {port} -b {this.dudeConfig.Baudrate} -U flash:w:{Path.Combine(extractPath, this.firmware.FlashFile)}:i -U eeprom:w:{Path.Combine(extractPath, this.firmware.EEPROMFile)}:i",
+                FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Program.DudeConfig.Programmer),
+                Arguments = $"{(Program.DudeConfig.Verbose ? "-v" : string.Empty)} -p {Program.Firmware.MCU} -c {Program.DudeConfig.Mode} -P {port} -b {Program.DudeConfig.Baudrate} -U flash:w:{Path.Combine(extractPath, Program.Firmware.FlashFile)}:i -U eeprom:w:{Path.Combine(extractPath, Program.Firmware.EEPROMFile)}:i",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -185,7 +131,7 @@ namespace RaGae.Projects.RCC.Programmer
             this.Enabled = false;
             this.progressBarStatus.Value = 10;
 
-            string[] lines = await File.ReadAllLinesAsync(Path.Combine(tempPath, firmware.EEPROMFile));
+            string[] lines = await File.ReadAllLinesAsync(Path.Combine(Program.TempPath, Program.Firmware.EEPROMFile));
 
             this.progressBarStatus.Value = 20;
 
@@ -218,10 +164,10 @@ namespace RaGae.Projects.RCC.Programmer
 
             Debug.WriteLine(lines[0]);
 
-            await File.WriteAllLinesAsync(Path.Combine(tempPath, $"{firmware.EEPROMFile}_modified"), lines);
+            await File.WriteAllLinesAsync(Path.Combine(Program.TempPath, $"{Program.Firmware.EEPROMFile}_modified"), lines);
             this.progressBarStatus.Value = 60;
 
-            await RunAvrdudeAsync(extractPath: tempPath, port: comboBoxPort.SelectedItem.ToString());
+            await RunAvrdudeAsync(extractPath: Program.TempPath, port: comboBoxPort.SelectedItem.ToString());
 
             this.progressBarStatus.Value = 100;
             this.Enabled = true;
@@ -255,18 +201,18 @@ namespace RaGae.Projects.RCC.Programmer
         {
             try
             {
-                if (File.Exists(tempZipPath))
+                if (File.Exists(Program.TempZIPPath))
                 {
-                    File.Delete(tempZipPath);
+                    File.Delete(Program.TempZIPPath);
                 }
             }
             catch { }
 
             try
             {
-                if (Directory.Exists(tempPath))
+                if (Directory.Exists(Program.TempPath))
                 {
-                    Directory.Delete(tempPath, recursive: true);
+                    Directory.Delete(Program.TempPath, recursive: true);
                 }
             }
             catch { }

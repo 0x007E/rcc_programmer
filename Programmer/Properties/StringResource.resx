@@ -123,9 +123,6 @@
   <data name="ErrorUnhandledUIException" xml:space="preserve">
     <value>Unhandled UI Exception</value>
   </data>
-  <data name="StatusFirmwareDownloadComplete" xml:space="preserve">
-    <value>Firmware downloaded successfully!</value>
-  </data>
   <data name="MessageBoxInformationTitle" xml:space="preserve">
     <value>Information</value>
   </data>
@@ -162,10 +159,25 @@
   <data name="ErrorPositionOutsideDataarea" xml:space="preserve">
     <value>Position is outside data area!</value>
   </data>
-  <data name="StatusProgrammerDownloadComplete" xml:space="preserve">
-    <value>Programmer (AVR-Dude) downloaded successfully!</value>
-  </data>
   <data name="ErrorProgrammerDownloadFailed" xml:space="preserve">
     <value>Programmer (AVR-Dude) download failed!</value>
+  </data>
+  <data name="ErrorFirmwareConfigNullAssignment" xml:space="preserve">
+    <value>Firmware configuration not found in appsettings.json!</value>
+  </data>
+  <data name="ErrorAVRDudeConfigNullAssignment" xml:space="preserve">
+    <value>AVR-Dude configuration not found in appsettings.json!</value>
+  </data>
+  <data name="MessageLoadingConfiguration" xml:space="preserve">
+    <value>Loading confguration!</value>
+  </data>
+  <data name="MessageLoadingAVRDude" xml:space="preserve">
+    <value>Loading AVR-Dude!</value>
+  </data>
+  <data name="MessageLoadingFirmware" xml:space="preserve">
+    <value>Loading firmware!</value>
+  </data>
+  <data name="MessageStartingApplication" xml:space="preserve">
+    <value>Starting application!</value>
   </data>
 </root>
