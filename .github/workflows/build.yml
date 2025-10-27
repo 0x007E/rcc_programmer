@@ -85,6 +85,7 @@ jobs:
       PROJECT_PATH: ".\\Programmer\\Programmer.csproj"
       CERTIFICATE_PATH: ".\\Programmer\\clickonce.pfx"
       PUBLISH_PATH: ".\\publish"
+      RUNTIME_IDENTIFIER: "win-x64"
       DOTNET_VERSION: "8.0.415"
     runs-on: windows-latest
     steps:
@@ -96,7 +97,7 @@ jobs:
         with:
           msbuild-architecture: x64
       - name: Restore packages
-        run: nuget restore ${{ env.SOLUTION_PATH }}
+        run: dotnet restore ${{ env.SOLUTION_PATH }} --runtime ${{ env.RUNTIME_IDENTIFIER }}
       - name: Decode and save PFX certificate
         shell: pwsh
         run: |
@@ -109,7 +110,7 @@ jobs:
           $password = ConvertTo-SecureString -String '${{ secrets.PFX_CLICKONCE_EXPORT_PASSWORD }}' -AsPlainText -Force
           Import-PfxCertificate -FilePath ${{ env.CERTIFICATE_PATH }} -CertStoreLocation Cert:\CurrentUser\My -Password $password
       - name: Publish ClickOnce
-        run: msbuild ${{ env.PROJECT_PATH }} /t:publish /p:PublishProfile=ClickOnceProfile /p:PublishDir=${{ env.PUBLISH_PATH }}
+        run: msbuild ${{ env.PROJECT_PATH }} /t:publish /p:PublishProfile=ClickOnceProfile /p:PublishDir=${{ env.PUBLISH_PATH }} /p:RuntimeIdentifier=${{ env.RUNTIME_IDENTIFIER }}
 
       - name: Upload ClickOnce Artifacts
         uses: actions/upload-artifact@v4
