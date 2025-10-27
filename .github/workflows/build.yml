@@ -81,10 +81,10 @@ jobs:
 
   build-programmer:
     env:
-      SOLUTION: ".\\RaGae.Projects.RCC.sln"
-      PROJECT_PATH: ".\\Programmer\\Programmer.csproj"
-      CERTIFICATE_PATH: ".\\Programmer\\clickonce.pfx"
-      PUBLISH_PATH: ".\\publish"
+      SOLUTION_FILE: ".\\RaGae.Projects.RCC.sln"
+      PROJECT_PATH: ".\\Programmer"
+      PROJECT_FILE: "Programmer.csproj"
+      CERTIFICATE_PATH: ".\\clickonce.pfx"
       RUNTIME_IDENTIFIER: "win-x64"
       READY_TO_RUN: true
       DOTNET_VERSION: "8.0.415"
@@ -98,7 +98,7 @@ jobs:
         with:
           msbuild-architecture: x64
       - name: Restore packages
-        run: dotnet restore ${{ env.SOLUTION_PATH }} --runtime ${{ env.RUNTIME_IDENTIFIER }} -p:PublishReadyToRun=${{ env.READY_TO_RUN }}
+        run: dotnet restore ${{ env.SOLUTION_FILE }} --runtime ${{ env.RUNTIME_IDENTIFIER }} -p:PublishReadyToRun=${{ env.READY_TO_RUN }}
       - name: Decode and save PFX certificate
         shell: pwsh
         run: |
@@ -112,10 +112,15 @@ jobs:
           Import-PfxCertificate -FilePath ${{ env.CERTIFICATE_PATH }} -CertStoreLocation Cert:\CurrentUser\My -Password $password
           Get-ChildItem Cert:\CurrentUser\My | select Subject,Thumbprint,HasPrivateKey,Provider
       - name: Publish ClickOnce
-        run: dotnet publish ${{ env.PROJECT_PATH }} -c Release /p:PublishProfile=ClickOnceProfile /p:PublishDir=${{ env.PUBLISH_PATH }} /p:RuntimeIdentifier=${{ env.RUNTIME_IDENTIFIER }} /p:PublishReadyToRun=${{ env.READY_TO_RUN }}
+        run: |
+          msbuild ${{ env.PROJECT_PATH }}\${{ env.PROJECT_FILE }} /t:publish /p:Configuration=Release /p:PublishProfile=ClickOnceProfile /p:PublishDir=.\publish /p:RuntimeIdentifier=${{ env.RUNTIME_IDENTIFIER }} /p:PublishReadyToRun=${{ env.READY_TO_RUN }}
+      - name: Create ClickOnce OutputFolder
+        run: |
+          mkdir .\data\clickonce
+          cp -r ${{ env.PROJECT_PATH }}\publish\* .\data\clickonce\
 
       - name: Upload ClickOnce Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-clickonce
-          path: ${{ env.PUBLISH_PATH }}
+          path: .\data
