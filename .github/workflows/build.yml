@@ -84,7 +84,6 @@ jobs:
       SOLUTION_FILE: ".\\RaGae.Projects.RCC.sln"
       PROJECT_PATH: ".\\Programmer"
       PROJECT_FILE: "Programmer.csproj"
-      CERTIFICATE_PATH: ".\\clickonce.pfx"
       RUNTIME_IDENTIFIER: "win-x64"
       READY_TO_RUN: true
       DOTNET_VERSION: "8.0.415"
@@ -104,12 +103,12 @@ jobs:
         run: |
           $pfxBase64 = '${{ secrets.PFX_CLICKONCE_CERTIFICATE_BASE64 }}'
           $bytes = [Convert]::FromBase64String($pfxBase64)
-          [IO.File]::WriteAllBytes("${{ env.CERTIFICATE_PATH }}", $bytes)
+          [IO.File]::WriteAllBytes("./clickonce.pfx", $bytes)
       - name: Import PFX certificate to Cert Store
         shell: pwsh
         run: |
           $password = ConvertTo-SecureString -String '${{ secrets.PFX_CLICKONCE_EXPORT_PASSWORD }}' -AsPlainText -Force
-          Import-PfxCertificate -FilePath ${{ env.CERTIFICATE_PATH }} -CertStoreLocation Cert:\CurrentUser\My -Password $password
+          Import-PfxCertificate -FilePath ./clickonce.pfx -CertStoreLocation Cert:\CurrentUser\My -Password $password
           Get-ChildItem Cert:\CurrentUser\My | select Subject,Thumbprint,HasPrivateKey,Provider
       - name: Publish ClickOnce
         run: |
