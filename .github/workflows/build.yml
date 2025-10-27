@@ -110,6 +110,7 @@ jobs:
         run: |
           $password = ConvertTo-SecureString -String '${{ secrets.PFX_CLICKONCE_EXPORT_PASSWORD }}' -AsPlainText -Force
           Import-PfxCertificate -FilePath ${{ env.CERTIFICATE_PATH }} -CertStoreLocation Cert:\CurrentUser\My -Password $password
+          Get-ChildItem Cert:\CurrentUser\My | select Subject,Thumbprint,HasPrivateKey,Provider
       - name: Publish ClickOnce
         run: dotnet publish ${{ env.PROJECT_PATH }} -c Release /p:PublishProfile=ClickOnceProfile /p:PublishDir=${{ env.PUBLISH_PATH }} /p:RuntimeIdentifier=${{ env.RUNTIME_IDENTIFIER }} /p:PublishReadyToRun=${{ env.READY_TO_RUN }}
 
