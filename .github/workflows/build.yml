@@ -85,7 +85,7 @@ jobs:
       PROJECT_PATH: ".\\Programmer\\Programmer.csproj"
       CERTIFICATE_PATH: ".\\Programmer\\clickonce.pfx"
       PUBLISH_PATH: ".\\publish"
-      DOTNET_VERSION: "8.0.21"
+      DOTNET_VERSION: "8.0.415"
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
