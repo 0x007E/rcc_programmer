@@ -112,7 +112,7 @@ jobs:
         run: msbuild ${{ env.PROJECT_PATH }} /t:publish /p:PublishProfile=ClickOnceProfile /p:PublishDir=${{ env.PUBLISH_PATH }}
 
       - name: Upload ClickOnce Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-clickonce
           path: ${{ env.PUBLISH_PATH }}
