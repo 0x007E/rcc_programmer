@@ -59,6 +59,12 @@ jobs:
         with:
           name: build-clickonce
           path: .\data
+      
+      - name: Upload files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .\data
 
   deploy:
     environment:
