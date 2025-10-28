@@ -78,11 +78,11 @@ The software loads avr-dude and the current firmware of the `RCC` from predefine
 
 > IMPORTANT: The battery should not be mounted during programming. There will be a short circuit between the internal `3V3` of the `FT230XS` and the battery!!!
 
-![Assembled](./images/programmer_starting.png)
+![Programmer Starting](./images/programmer_starting.png)
 
-![Assembled](./images/programmer_color_selection.png)
+![Programmer Selection](./images/programmer_color_selection.png)
 
-![Assembled](./images/programmer_program.png)
+![Programmer Program](./images/programmer_program.png)
 
 # Additional Information
 
