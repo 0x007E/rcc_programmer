@@ -5,6 +5,15 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   export-kicad:
     env:
@@ -76,8 +85,70 @@ jobs:
         path: ${{ env.OutputFolder }}
         retention-days: 1
   
+  build-software:
+    env:
+      SOLUTION_FILE: ".\\RaGae.Projects.RCC.sln"
+      PROJECT_PATH: ".\\Programmer"
+      PROJECT_FILE: "Programmer.csproj"
+      RUNTIME_IDENTIFIER: "win-x64"
+      READY_TO_RUN: true
+      DOTNET_VERSION: "8.0.415"
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "${{ env.DOTNET_VERSION }}"
+      - uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: Restore packages
+        run: dotnet restore ${{ env.SOLUTION_FILE }} --runtime ${{ env.RUNTIME_IDENTIFIER }} -p:PublishReadyToRun=${{ env.READY_TO_RUN }}
+      - name: Decode and save PFX certificate
+        shell: pwsh
+        run: |
+          $pfxBase64 = '${{ secrets.PFX_CLICKONCE_CERTIFICATE_BASE64 }}'
+          $bytes = [Convert]::FromBase64String($pfxBase64)
+          [IO.File]::WriteAllBytes("./clickonce.pfx", $bytes)
+      - name: Import PFX certificate to Cert Store
+        shell: pwsh
+        run: |
+          $password = ConvertTo-SecureString -String '${{ secrets.PFX_CLICKONCE_EXPORT_PASSWORD }}' -AsPlainText -Force
+          Import-PfxCertificate -FilePath ./clickonce.pfx -CertStoreLocation Cert:\CurrentUser\My -Password $password
+          Get-ChildItem Cert:\CurrentUser\My | select Subject,Thumbprint,HasPrivateKey,Provider
+      - name: Publish ClickOnce
+        run: |
+          msbuild ${{ env.PROJECT_PATH }}\${{ env.PROJECT_FILE }} /t:publish /p:Configuration=Release /p:PublishProfile=ClickOnceProfile /p:PublishDir=.\publish /p:RuntimeIdentifier=${{ env.RUNTIME_IDENTIFIER }} /p:PublishReadyToRun=${{ env.READY_TO_RUN }}
+      - name: Create ClickOnce OutputFolder
+        run: |
+          mkdir .\data\clickonce
+          cp -r ${{ env.PROJECT_PATH }}\publish\* .\data\clickonce\
+
+      - name: Upload ClickOnce Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-clickonce
+          path: .\data
+      
+      - name: Upload files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .\data
+
+  deploy-pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-software
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
   create-release:
-    needs: [export-kicad, export-freecad]
+    needs: [export-kicad, export-freecad, build-software]
     runs-on: ubuntu-latest
     steps:
     - name: Create Release
@@ -210,5 +281,39 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./artifact/freecad.zip
         asset_name: freecad.zip
+        asset_content_type: application/zip
+    
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-clickonce
+        path: ./artifact/build
+    - name: Display structure
+      run: ls -R ./artifact/build
+    - name: Create Compressed File
+      run: |
+        cd ./artifact
+        tar -czvf ./build.tar.gz ./build
+        zip -r ./build.zip ./build
+        cd ..
+
+    - name: Upload Build Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/build.tar.gz
+        asset_name: programmer.tar.gz
+        asset_content_type: application/gzip
+    
+    - name: Upload Build Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifact/build.zip
+        asset_name: programmer.zip
         asset_content_type: application/zip
 
