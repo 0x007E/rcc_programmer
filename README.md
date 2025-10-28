@@ -19,7 +19,8 @@ The `RCC_programmer` project is based on a pcb with an [FT230XS](#additional-inf
 | Drill | [pdf](https://github.com/0x007E/rcc_programmer/releases/latest/download/drill.pdf) | Drill file |
 | PCB | [zip](https://github.com/0x007E/rcc_programmer/releases/latest/download/kicad.zip) / [tar](https://github.com/0x007E/rcc_programmer/releases/latest/download/kicad.tar.gz) | KiCAD/Gerber/BoM/Drill files |
 | Mechanical | [zip](https://github.com/0x007E/rcc_programmer/releases/latest/download/freecad.zip) / [tar](https://github.com/0x007E/rcc_programmer/releases/latest/download/freecad.tar.gz) | FreeCAD/Housing and PCB (STEP) files     |
-| Software | [exe](https://0x007e.github.io/rcc_programmer/clickonce/setup.exe) | Programming software for RCC |
+| Installer | [exe](https://0x007e.github.io/rcc_programmer/clickonce/setup.exe) | ClickOnce installer (x64) for RCC Programming software |
+| Portable | [zip](https://github.com/0x007E/rcc_programmer/releases/latest/download/programmer.zip) / [tar](https://github.com/0x007E/rcc_programmer/releases/latest/download/programmer.tar.gz) | Software (x64) for Programming the RCC |
 
 # Hardware
 
@@ -73,6 +74,12 @@ The `RCC_programmer` is powerd over USB with `5V` and uses the internal `3V3` co
 ```
 
 # Software
+
+| Icon                                             | Description           |
+|:------------------------------------------------:|:----------------------|
+| ![Programmer Icon](./images/programmer_Icon.png) | ClickOnce installable |
+
+> The app can be installed as clickonce application that automatically gets updated or run as portable app that need to be updated manually. Both files (setup/portable) are found in the [download section](#downloads).
 
 The software loads avr-dude and the current firmware of the `RCC` from predefined repositories in `appsettings.json`. By clicking onto the LEDs the color of each LED can be defined. With the intensity trackbar the brightness of the LEDs can be adjusted. To program the `RCC` the correct selection of the serial port is necessary. By hitting the program button the `RCC` gets programmed over `serialupdi` with `avr-dude` (if the programmer is connected correctly with the `RCC`).
 
