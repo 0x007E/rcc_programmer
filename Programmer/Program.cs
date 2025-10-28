@@ -7,11 +7,14 @@ namespace RaGae.Projects.RCC.Programmer
 {
     internal static class Program
     {
-        public static IConfiguration Configuration;
-
         private static Firmware firmware;
         private static DudeConfig dudeConfig;
-        public static List<CubeColor> cubeColor;
+
+        public static IConfiguration Configuration
+        {
+            get;
+            set;
+        }
 
         public static Firmware Firmware
         {
@@ -25,7 +28,7 @@ namespace RaGae.Projects.RCC.Programmer
             set => dudeConfig = value ?? throw new ArgumentNullException(nameof(value), StringResource.ErrorAVRDudeConfigNullAssignment);
         }
 
-        public static List<CubeColor> CubeColor
+        public static List<CubeColor>? CubeColor
         {
             get;
             set;
