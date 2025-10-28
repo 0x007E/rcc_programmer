@@ -131,9 +131,9 @@
             // 
             pictureBoxProgrammer.BackgroundImage = Resources.ImageAssembled;
             pictureBoxProgrammer.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBoxProgrammer.Location = new Point(227, 57);
+            pictureBoxProgrammer.Location = new Point(241, 57);
             pictureBoxProgrammer.Name = "pictureBoxProgrammer";
-            pictureBoxProgrammer.Size = new Size(114, 114);
+            pictureBoxProgrammer.Size = new Size(100, 124);
             pictureBoxProgrammer.TabIndex = 10;
             pictureBoxProgrammer.TabStop = false;
             // 
@@ -143,7 +143,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(400, 250);
             ControlBox = false;
-            Controls.Add(pictureBoxProgrammer);
             Controls.Add(labelVersion);
             Controls.Add(linkLabelGitHub);
             Controls.Add(labelStatusText);
@@ -152,6 +151,7 @@
             Controls.Add(checkBoxAVRDude);
             Controls.Add(progressBarStatus);
             Controls.Add(labelTitle);
+            Controls.Add(pictureBoxProgrammer);
             FormBorderStyle = FormBorderStyle.None;
             MaximizeBox = false;
             MaximumSize = new Size(400, 250);
