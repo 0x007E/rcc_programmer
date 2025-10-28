@@ -19,7 +19,7 @@ The `RCC_programmer` project is based on a pcb with an [FT230XS](#additional-inf
 | Drill | [pdf](https://github.com/0x007E/rcc_programmer/releases/latest/download/drill.pdf) | Drill file |
 | PCB | [zip](https://github.com/0x007E/rcc_programmer/releases/latest/download/kicad.zip) / [tar](https://github.com/0x007E/rcc_programmer/releases/latest/download/kicad.tar.gz) | KiCAD/Gerber/BoM/Drill files |
 | Mechanical | [zip](https://github.com/0x007E/rcc_programmer/releases/latest/download/freecad.zip) / [tar](https://github.com/0x007E/rcc_programmer/releases/latest/download/freecad.tar.gz) | FreeCAD/Housing and PCB (STEP) files     |
-| Software | [exe](https://0x007e.github.com/rcc_programmer/clickonce/setup.exe) | Programming software for RCC |
+| Software | [exe](https://0x007e.github.io/rcc_programmer/clickonce/setup.exe) | Programming software for RCC |
 
 # Hardware
 
