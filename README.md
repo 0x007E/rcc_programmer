@@ -79,7 +79,7 @@ The `RCC_programmer` is powerd over USB with `5V` and uses the internal `3V3` co
 
 | Icon                                             | Description           |
 |:------------------------------------------------:|:----------------------|
-| ![Programmer Icon](./images/programmer_Icon.png) | ClickOnce installable |
+| ![Programmer Icon](./images/programmer_icon.png) | ClickOnce installable |
 
 > The app can be installed as clickonce application that automatically gets updated or run as portable app that need to be updated manually. Both files (setup/portable) are found in the [download section](#downloads).
 
