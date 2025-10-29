@@ -2,6 +2,8 @@
 
 # `RCC_programmer` - RCC (UPDI) Programmer
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/0x007E/rcc_programmer)
+
 The `RCC_programmer` project is based on a pcb with an [FT230XS](#additional-information) to program the [RCC](https://github.com/0x0007e/rcc) (RGB LED Color Cube). It either can be programmed with the developed module or with a simple self-made [UPDI](#additional-information) converter. The deliverd software writes the defined settings with `avr-dude` over `serialupdi` onto the [ATTiny402](#additional-information).
 
 | Experience | Level |
